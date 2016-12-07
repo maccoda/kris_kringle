@@ -1,6 +1,7 @@
 extern crate rand;
 
-use std::io;
+use std::io::{self, Write};
+use std::fs::File;
 use rand::Rng;
 
 struct KkPair {
@@ -36,9 +37,13 @@ fn main() {
         pairs[giver2_index].receiver = temp;
     }
 
-    // for pair in &pairs {
-    //     println!("{:?} -> {:?}", pair.giver, pair.receiver);
-    // }
+    for pair in &pairs {
+        let mut file_name: String = pair.giver.to_owned();
+        file_name.push_str(".kk");
+        let mut file = File::create(file_name).unwrap();
+        let content: &[u8] = &(pair.receiver.to_owned().into_bytes())[..];
+        file.write_all(content).unwrap();
+    }
 
     // Time to ask who is doing this
     loop {
