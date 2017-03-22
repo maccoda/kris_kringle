@@ -1,6 +1,6 @@
 extern crate rand;
 
-use std::io::{self, Write};
+use std::io::{self, Write, Read, BufReader, BufRead};
 use std::fs::File;
 use rand::Rng;
 
@@ -11,16 +11,31 @@ struct KkPair {
 
 fn main() {
     let mut all = Vec::new();
-    println!("How many people are part of this KK group?");
-    let mut num = String::new();
-    io::stdin().read_line(&mut num).expect("Failed read");
-    let num = num.trim().parse().expect("Failed parse");
-    for _ in 0..num {
-        println!("Give me a name: ");
-        let mut name = String::new();
-        io::stdin().read_line(&mut name).expect("Failed read");
-        all.push(name);
+    let stdin = false;
+
+    if stdin {
+        // Obtain from stdin
+        println!("How many people are part of this KK group?");
+        let mut num = String::new();
+        io::stdin().read_line(&mut num).expect("Failed read");
+        let num = num.trim().parse().expect("Failed parse");
+        for _ in 0..num {
+            println!("Give me a name: ");
+            let mut name = String::new();
+            io::stdin().read_line(&mut name).expect("Failed read");
+            all.push(name);
+        }
+    } else {
+        // Obtain from file
+        println!("Reading from file");
+        let input = File::open("tests/resources/people.txt").unwrap();
+        let content = BufReader::new(input);
+        for user in content.lines() {
+            println!("{:?}", user);
+            all.push(user.unwrap());
+        }
     }
+
 
     let mut pairs: Vec<KkPair> = Vec::new();
     for person in &all {
