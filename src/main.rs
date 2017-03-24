@@ -5,13 +5,21 @@ use std::fs::File;
 use rand::Rng;
 
 struct KkPair {
-    giver: String,
-    receiver: String,
+    giver: Person,
+    receiver: Person,
+}
+
+#[derive(Debug, Clone)]
+struct Person {
+    group: Option<u32>,
+    name: String,
 }
 
 fn main() {
-    let mut all = Vec::new();
+    let mut all: Vec<Person> = Vec::new();
+    // HACK These should be command line parameters
     let stdin = false;
+    let grouping = true;
 
     if stdin {
         // Obtain from stdin
@@ -23,25 +31,45 @@ fn main() {
             println!("Give me a name: ");
             let mut name = String::new();
             io::stdin().read_line(&mut name).expect("Failed read");
-            all.push(name);
+            all.push(Person {
+                name: name,
+                group: None,
+            });
         }
     } else {
         // Obtain from file
         println!("Reading from file");
-        let input = File::open("tests/resources/people.txt").unwrap();
+        // FIXME This is crappy hardcoding for lack of testing
+        let input = File::open("tests/resources/groups.txt").unwrap();
         let content = BufReader::new(input);
         for user in content.lines() {
             println!("{:?}", user);
-            all.push(user.unwrap());
+            let un_user = user.unwrap();
+            if grouping {
+                let mut split = un_user.splitn(2, ":").map(|x| x.to_owned());
+                let name: String = split.next().unwrap();
+                let group: u32 = split.next().unwrap().parse().unwrap();
+                // TODO will need a new algorithm or tweaked algorithm to not
+                // allow people to have another person that is in the same group
+                all.push(Person {
+                    name: name,
+                    group: Some(group),
+                });
+            } else {
+                all.push(Person {
+                    name: un_user,
+                    group: None,
+                });
+            }
         }
     }
 
-
+    // Construct the pairing
     let mut pairs: Vec<KkPair> = Vec::new();
     for person in &all {
         pairs.push(KkPair {
-            giver: (*person).trim().to_string(),
-            receiver: (*person).trim().to_string(),
+            giver: person.clone(),
+            receiver: person.clone(),
         });
     }
     while invalid_map(&pairs) {
@@ -52,11 +80,12 @@ fn main() {
         pairs[giver2_index].receiver = temp;
     }
 
+    // Create the output for the results
     for pair in &pairs {
-        let mut file_name: String = pair.giver.to_owned();
+        let mut file_name: String = pair.giver.name.to_owned();
         file_name.push_str(".kk");
         let mut file = File::create(file_name).unwrap();
-        let content: &[u8] = &(pair.receiver.to_owned().into_bytes())[..];
+        let content: &[u8] = &(pair.receiver.name.to_owned().into_bytes())[..];
         file.write_all(content).unwrap();
     }
 
@@ -80,19 +109,31 @@ fn main() {
 
 }
 
+/// Determines if this is a valid match up. Initially needs to check that
+/// user is not giving present to themselves. Second check, if enabled is to
+/// confirm that groups are different.
 fn invalid_map(pairs: &Vec<KkPair>) -> bool {
     for pair in pairs {
-        if pair.giver.eq(&pair.receiver) {
-            return true;
+        println!("{:?} --> {:?}", pair.giver, pair.receiver);
+        if pair.giver.name.eq(&pair.receiver.name) {
+            // Check if both have a group
+            if pair.giver.group.is_some() && pair.giver.group.is_some() {
+                let giver_group = pair.giver.group.unwrap();
+                let recvr_group = pair.receiver.group.unwrap();
+                if giver_group == recvr_group {
+                    return true;
+                }
+            }
         }
     }
     false
 }
 
+/// Given the name of the giver will find the name of the receiver
 fn find_kk(pairs: &Vec<KkPair>, needle: &String) -> Option<String> {
     for pair in pairs {
-        if pair.giver.eq(needle) {
-            return Some(pair.receiver.clone());
+        if pair.giver.name.eq(needle) {
+            return Some(pair.receiver.name.clone());
         }
     }
     None
