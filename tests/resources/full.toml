@@ -1,0 +1,47 @@
+[[groups]]
+    id = 1
+    email = "test1@hotmail.com"
+[[groups]]
+    id = 2
+    email = "test2@gmail.com"
+   [[groups]]
+   id = 3
+    email = "test3@yahoo.com"
+[[groups]]
+    id = 4
+    email = "test4@outlook.com"
+
+
+[[participants]]
+    name = "Dylan"
+    group = 1
+[[participants]]
+    name = "Jordan"
+    group = 1
+[[participants]]
+    name = "Luke"
+    group = 1
+[[participants]]
+    name = "Olivia"
+    group = 2
+[[participants]]
+    name = "Alec"
+    group = 2
+[[participants]]
+    name = "Dean"
+    group = 2
+[[participants]]
+    name = "Alessia"
+    group = 3
+[[participants]]
+    name = "Sienna"
+    group = 3
+[[participants]]
+    name = "Isabella"
+    group = 4
+[[participants]]
+    name = "Max"
+    group = 4
+[[participants]]
+    name = "Luca"
+    group = 4

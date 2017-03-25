@@ -6,11 +6,7 @@ Just a little terminal application to easily organize Christmas Kris Kringles. M
 * This is randomly generated so each run will result in a different pairing. Can use the generated files so will only need to run once.
 
 ## Run
-This project is built with cargo and can be run with `cargo run`
+This project is built with cargo and can be run with `cargo run --bin main -- <conf-file>`
 
-That is all you need. The application will run you through the steps. It is also running on an infinite loop just incase someone needed to check their list twice so just end it with `ctrl + c`, I know not the prettiest but will do for now.
 
-## TODO
-* Clean up the infinite loop
-* Remove the view in terminal and move all to viewing of files
-* Make more efficient input method rather than having to enter names each time
+
