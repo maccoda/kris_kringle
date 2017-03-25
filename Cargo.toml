@@ -4,6 +4,7 @@ version = "0.1.0"
 authors = ["maccod <maccora17@gmail.com>"]
 
 [dependencies]
-clap="2.22"
-rand="0.3.*"
-lettre="0.6.2"
+clap = "2.22"
+rand = "0.3.*"
+lettre = "0.6.2"
+toml = "0.3"
