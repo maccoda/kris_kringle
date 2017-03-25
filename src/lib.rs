@@ -8,10 +8,10 @@ use std::path::Path;
 use rand::Rng;
 
 mod conf;
-mod file_utils;
+pub mod file_utils;
 
 #[derive(Debug)]
-pub struct KkPair {
+struct KkPair {
     giver: conf::Participants,
     receiver: conf::Participants,
 }
@@ -32,6 +32,8 @@ pub struct KrisKringles {
 }
 
 impl KrisKringles {
+    /// Construct the kris kringle matcher from the provided configuration file. The file will need to be
+    /// a TOML file following the structure seen in the file at `tests/resources/full.toml`
     pub fn build_kks_from_file<P: AsRef<Path>>(path: P) -> KrisKringles {
         let conf = conf::KkConf::build(path);
         let pairs = perform_pairing(&conf.get_participants());
@@ -43,6 +45,9 @@ impl KrisKringles {
 
     }
 
+    /// Once the configuration has been loaded, this will allow for the allocation of the kris kringles following
+    /// the criteria that a pair must consist of two separate people (i.e. cannot give a present to themself) and
+    /// they must be from a separate group as allocated in the configuration.
     pub fn write_kks_to_file<P: AsRef<Path>>(&self, path: P) {
         let mut all_content = String::new();
         for pair in &self.pairs {
@@ -82,9 +87,9 @@ fn perform_pairing(all: &Vec<conf::Participants>) -> Vec<KkPair> {
     while invalid_map(&pairs) {
         shuffle_pairs(all.len(), &mut pairs);
     }
-    for pair in &pairs {
-        println!("{:?} --> {:?}", pair.giver, pair.receiver);
-    }
+    // for pair in &pairs {
+    //     println!("{:?} --> {:?}", pair.giver, pair.receiver);
+    // }
     pairs
 }
 
@@ -103,13 +108,20 @@ fn shuffle_pairs(max_length: usize, pairs: &mut Vec<KkPair>) {
 /// confirm that groups are different.
 fn invalid_map(pairs: &Vec<KkPair>) -> bool {
     for pair in pairs {
+        // TODO Change all the below to logs
+        // println!("Comparing {:?} - {:?}", pair.giver, pair.receiver);
+
         if pair.giver.get_name().eq(&pair.receiver.get_name()) {
-            let giver_group = pair.giver.get_group();
-            let recvr_group = pair.receiver.get_group();
-            if giver_group == recvr_group {
-                return true;
-            }
+            // println!("It is invalid");
+            return true;
+        }
+        let giver_group = pair.giver.get_group();
+        let recvr_group = pair.receiver.get_group();
+        if giver_group == recvr_group {
+            // println!("It is invalid");
+            return true;
         }
     }
+    // println!("It is valid");
     false
 }

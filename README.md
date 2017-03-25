@@ -6,7 +6,7 @@ Just a little terminal application to easily organize Christmas Kris Kringles. M
 * This is randomly generated so each run will result in a different pairing. Can use the generated files so will only need to run once.
 
 ## Run
-This project is built with cargo and can be run with `cargo run`
+This project is built with cargo and can be run with `cargo run --bin main -- <conf-file>`
 
 
 

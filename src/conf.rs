@@ -64,3 +64,46 @@ impl Group {
         self.email.clone()
     }
 }
+
+#[cfg(test)]
+mod tests {
+    #[test]
+    fn test_build() {
+        let result = super::conf::KkConf::build("tests/resources/full.toml");
+
+        let groups = result.get_groups();
+        assert_eq!(1, groups[0].get_id());
+        assert!(groups[0].get_email().eq("test1@hotmail.com"));
+        assert_eq!(2, groups[1].get_id());
+        assert!(groups[1].get_email().eq("test2@gmail.com"));
+        assert_eq!(3, groups[2].get_id());
+        assert!(groups[2].get_email().eq("test3@yahoo.com"));
+        assert_eq!(4, groups[3].get_id());
+        assert!(groups[3].get_email().eq("test4@outlook.com"));
+
+        let participants = result.get_participants();
+        assert_eq!(1, participants[0].get_group());
+        assert!(participants[0].get_name().eq("Dylan"));
+        assert_eq!(1, participants[1].get_group());
+        assert!(participants[1].get_name().eq("Jordan"));
+        assert_eq!(1, participants[2].get_group());
+        assert!(participants[2].get_name().eq("Luke"));
+        assert_eq!(2, participants[3].get_group());
+        assert!(participants[3].get_name().eq("Olivia"));
+        assert_eq!(2, participants[4].get_group());
+        assert!(participants[4].get_name().eq("Alec"));
+        assert_eq!(2, participants[5].get_group());
+        assert!(participants[5].get_name().eq("Dean"));
+        assert_eq!(3, participants[6].get_group());
+        assert!(participants[6].get_name().eq("Alessia"));
+        assert_eq!(3, participants[7].get_group());
+        assert!(participants[7].get_name().eq("Sienna"));
+        assert_eq!(4, participants[8].get_group());
+        assert!(participants[8].get_name().eq("Isabella"));
+        assert_eq!(4, participants[9].get_group());
+        assert!(participants[9].get_name().eq("Max"));
+        assert_eq!(4, participants[10].get_group());
+        assert!(participants[10].get_name().eq("Luca"));
+
+    }
+}
