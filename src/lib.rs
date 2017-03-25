@@ -1,8 +1,8 @@
 extern crate rand;
+#[macro_use]
+extern crate serde_derive;
 extern crate toml;
 
-use std::io::{BufRead, BufReader, Write};
-use std::fs::File;
 use std::path::Path;
 
 use rand::Rng;
@@ -12,32 +12,16 @@ mod file_utils;
 
 #[derive(Debug)]
 pub struct KkPair {
-    giver: Person,
-    receiver: Person,
+    giver: conf::Participants,
+    receiver: conf::Participants,
 }
 
 impl KkPair {
-    pub fn get_giver(&self) -> Person {
+    pub fn get_giver(&self) -> conf::Participants {
         self.giver.clone()
     }
-    pub fn get_receiver(&self) -> Person {
+    pub fn get_receiver(&self) -> conf::Participants {
         self.receiver.clone()
-    }
-}
-
-#[derive(Debug, Clone)]
-pub struct Person {
-    group: Option<conf::Group>,
-    name: String,
-}
-
-impl Person {
-    pub fn get_name(&self) -> String {
-        self.name.clone()
-    }
-
-    pub fn get_group(&self) -> Option<conf::Group> {
-        self.group.clone()
     }
 }
 
@@ -75,45 +59,19 @@ impl KrisKringles {
         file_utils::write_to_file(path, all_content);
     }
 
-
-
-    pub fn assign_kks(users: &Vec<String>) -> Vec<KkPair> {
-        let mut all = vec![];
-        for name in users {
-            all.push(parse_user(name.to_owned()));
+    /// Given the name of the giver will find the name of the receiver
+    pub fn find_kk(&self, giver: &str) -> Option<String> {
+        for pair in &self.pairs {
+            if pair.giver.get_name().eq(giver) {
+                return Some(pair.receiver.get_name().clone());
+            }
         }
-        perform_pairing(&all)
-    }
-}
-
-/// Given a string this will construct a `Person` with the appropriate group if provided.
-// TODO This function will not be needed once get proper configuration file
-fn parse_user(user: String) -> Person {
-    println!("{:?}", user);
-    if user.contains(':') {
-        let mut split = user.splitn(2, ':').map(|x| x.to_owned());
-        let name: String = split.next().unwrap();
-        let group: u32 = split.next()
-            .unwrap()
-            .parse()
-            .unwrap();
-        Person {
-            name: name,
-            group: Some(conf::Group {
-                            id: group,
-                            email: String::new(),
-                        }),
-        }
-    } else {
-        Person {
-            name: user,
-            group: None,
-        }
+        None
     }
 }
 
 /// Performs the pairing of each giver to the receiver
-fn perform_pairing(all: &Vec<Person>) -> Vec<KkPair> {
+fn perform_pairing(all: &Vec<conf::Participants>) -> Vec<KkPair> {
     let mut pairs: Vec<KkPair> = Vec::new();
     for person in all {
         pairs.push(KkPair {
@@ -145,33 +103,13 @@ fn shuffle_pairs(max_length: usize, pairs: &mut Vec<KkPair>) {
 /// confirm that groups are different.
 fn invalid_map(pairs: &Vec<KkPair>) -> bool {
     for pair in pairs {
-        if pair.giver.name.eq(&pair.receiver.name) && pair.giver.group.is_some() &&
-           pair.giver.group.is_some() {
-            // let giver_group = pair.giver
-            //     .group
-            //     .unwrap()
-            //     .get_id();
-            // let recvr_group = pair.receiver
-            //     .group
-            //     .unwrap()
-            //     .get_id();
-            // FIXME Just crappy until it has been cleaned up
-            let giver_group = 0;
-            let recvr_group = 1;
+        if pair.giver.get_name().eq(&pair.receiver.get_name()) {
+            let giver_group = pair.giver.get_group();
+            let recvr_group = pair.receiver.get_group();
             if giver_group == recvr_group {
                 return true;
             }
         }
     }
     false
-}
-
-/// Given the name of the giver will find the name of the receiver
-pub fn find_kk(pairs: &Vec<KkPair>, needle: &String) -> Option<String> {
-    for pair in pairs {
-        if pair.giver.name.eq(needle) {
-            return Some(pair.receiver.name.clone());
-        }
-    }
-    None
 }

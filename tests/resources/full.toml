@@ -1,18 +1,47 @@
-[groups]
-    1="a.maccora@gmail.com"
-    2="maccora17@gmail.com"
-    3="jordanmaccora@gmail.com"
-    4="themaccoras@bigpond.com"
+[[groups]]
+    id = 1
+    email = "a.maccora@gmail.com"
+[[groups]]
+    id = 2
+    email = "maccora17@gmail.com"
+   [[groups]]
+   id = 3
+    email = "jordanmaccora@gmail.com"
+[[groups]]
+    id = 4
+    email = "themaccoras@bigpond.com"
 
-[participants]
-    Dylan=1
-    Jordan=1
-    Luke=1
-    Olivia=2
-    Alec=2
-    Dean=2
-    Alessia=3
-    Sienna=3
-    Isabella=4
-    Max=4
-    Luca=4
+
+[[participants]]
+    name = "Dylan"
+    group = 1
+[[participants]]
+    name = "Jordan"
+    group = 1
+[[participants]]
+    name = "Luke"
+    group = 1
+[[participants]]
+    name = "Olivia"
+    group = 2
+[[participants]]
+    name = "Alec"
+    group = 2
+[[participants]]
+    name = "Dean"
+    group = 2
+[[participants]]
+    name = "Alessia"
+    group = 3
+[[participants]]
+    name = "Sienna"
+    group = 3
+[[participants]]
+    name = "Isabella"
+    group = 4
+[[participants]]
+    name = "Max"
+    group = 4
+[[participants]]
+    name = "Luca"
+    group = 4
