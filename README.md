@@ -8,9 +8,5 @@ Just a little terminal application to easily organize Christmas Kris Kringles. M
 ## Run
 This project is built with cargo and can be run with `cargo run`
 
-That is all you need. The application will run you through the steps. It is also running on an infinite loop just incase someone needed to check their list twice so just end it with `ctrl + c`, I know not the prettiest but will do for now.
 
-## TODO
-* Clean up the infinite loop
-* Remove the view in terminal and move all to viewing of files
-* Make more efficient input method rather than having to enter names each time
+
