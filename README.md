@@ -7,6 +7,3 @@ Just a little terminal application to easily organize Christmas Kris Kringles. M
 
 ## Run
 This project is built with cargo and can be run with `cargo run --bin main -- <conf-file>`
-
-
-

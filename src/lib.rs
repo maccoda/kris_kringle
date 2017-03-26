@@ -1,3 +1,4 @@
+extern crate lettre;
 extern crate rand;
 #[macro_use]
 extern crate serde_derive;
@@ -8,6 +9,7 @@ use std::path::Path;
 use rand::Rng;
 
 mod conf;
+mod email;
 pub mod file_utils;
 
 #[derive(Debug)]
@@ -72,6 +74,27 @@ impl KrisKringles {
             }
         }
         None
+    }
+
+    /// Returns all participants used in the Kris Kringle allocation
+    pub fn get_participants(&self) -> Vec<String> {
+        self.configuration
+            .get_participants()
+            .iter()
+            .map(|x| x.get_name())
+            .collect()
+    }
+
+    /// Sends emails to the allocated giver of the Kris Kringle pair. This function
+    /// will fail if the allocation has not yet been performed.
+    // TODO Add some error handling
+    pub fn email_givers(&self) -> Result<bool, String> {
+        if invalid_map(&self.pairs) {
+            return Err(String::from("The pairs have not yet been allocated!!!"));
+        }
+
+        email::send_emails(self).unwrap();
+        Ok(true)
     }
 }
 
