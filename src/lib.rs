@@ -1,4 +1,6 @@
 extern crate lettre;
+#[macro_use]
+extern crate log;
 extern crate rand;
 #[macro_use]
 extern crate serde_derive;
@@ -131,20 +133,19 @@ fn shuffle_pairs(max_length: usize, pairs: &mut Vec<KkPair>) {
 /// confirm that groups are different.
 fn invalid_map(pairs: &Vec<KkPair>) -> bool {
     for pair in pairs {
-        // TODO Change all the below to logs
-        // println!("Comparing {:?} - {:?}", pair.giver, pair.receiver);
+        debug!("Comparing {:?} - {:?}", pair.giver, pair.receiver);
 
         if pair.giver.get_name().eq(&pair.receiver.get_name()) {
-            // println!("It is invalid");
+            debug!("It is invalid");
             return true;
         }
         let giver_group = pair.giver.get_group();
         let recvr_group = pair.receiver.get_group();
         if giver_group == recvr_group {
-            // println!("It is invalid");
+            debug!("It is invalid");
             return true;
         }
     }
-    // println!("It is valid");
+    debug!("It is valid");
     false
 }
