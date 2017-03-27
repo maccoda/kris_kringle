@@ -23,6 +23,8 @@ fn main() {
     let file_name = matches.value_of("INPUT").expect("Need a configuration file!");
     let kks = KrisKringles::build_kks_from_file(file_name);
     kks.write_kks_to_file("test.kk");
+
+    kks.email_givers().unwrap();
 }
 
 use log::{LogLevel, LogRecord, LogMetadata};

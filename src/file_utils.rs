@@ -9,7 +9,7 @@ pub fn write_to_file<P: AsRef<Path>>(file_name: P, content_to_write: String) {
     file.write_all(content).unwrap();
 }
 
-// Reads and returns the contents of the file at the path provided.
+/// Reads and returns the contents of the file at the path provided.
 pub fn read_from_file<P: AsRef<Path>>(file_name: P) -> String {
     let mut content = String::new();
     let mut file = File::open(file_name).unwrap();

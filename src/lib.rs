@@ -29,6 +29,8 @@ impl KkPair {
     }
 }
 
+/// This is the parent type of this process. It contains all of the data required to allocate
+/// and distribute the information.
 #[derive(Debug)]
 pub struct KrisKringles {
     configuration: conf::KkConf,
@@ -90,13 +92,17 @@ impl KrisKringles {
     /// Sends emails to the allocated giver of the Kris Kringle pair. This function
     /// will fail if the allocation has not yet been performed.
     // TODO Add some error handling
-    pub fn email_givers(&self) -> Result<bool, String> {
+    pub fn email_givers(&self) -> Result<(), String> {
         if invalid_map(&self.pairs) {
             return Err(String::from("The pairs have not yet been allocated!!!"));
         }
 
-        email::send_emails(self).unwrap();
-        Ok(true)
+        if email::send_emails(self).is_ok() {
+            Ok(())
+        } else {
+            Err(String::from("Unable to send emails"))
+        }
+
     }
 }
 
