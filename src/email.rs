@@ -10,21 +10,22 @@ use lettre::transport::smtp;
 /// single email for each group containing details for each giver that is a part of that group.
 pub fn send_emails(conf: &super::KrisKringles) -> Result<(), String> {
     debug!("Time to start sending emails");
-    debug!("Using the email: {:?}", env::var("GMAIL_USERNAME").unwrap());
+    info!("Using the email: {:?}", env::var("GMAIL_USERNAME").unwrap());
     let mut transport = smtp::SmtpTransportBuilder::new(("smtp.gmail.com", smtp::SUBMISSION_PORT))
         .expect("failed to create transport")
         .credentials(&env::var("GMAIL_USERNAME").unwrap(),
                      &env::var("GMAIL_PASSWORD").unwrap())
         .build();
     for group in &conf.configuration.get_groups() {
+        info!("Constructing email for {:?}", group.get_email());
 
-        collate_group_content(group, conf);
+        let body = collate_group_content(group, conf);
 
         let email = EmailBuilder::new()
             .from("santa.claus@northpole.com")
             .to(group.get_email().as_ref())
             .subject("Kris Kringle allocation")
-            .body("Your KK is...")
+            .body(body.as_ref())
             .build()
             .expect("Someone has stuffed up here..");
 
