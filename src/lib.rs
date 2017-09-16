@@ -1,3 +1,6 @@
+extern crate lettre;
+#[macro_use]
+extern crate log;
 extern crate rand;
 #[macro_use]
 extern crate serde_derive;
@@ -8,6 +11,7 @@ use std::path::Path;
 use rand::Rng;
 
 mod conf;
+mod email;
 pub mod file_utils;
 
 #[derive(Debug)]
@@ -25,6 +29,8 @@ impl KkPair {
     }
 }
 
+/// This is the parent type of this process. It contains all of the data required to allocate
+/// and distribute the information.
 #[derive(Debug)]
 pub struct KrisKringles {
     configuration: conf::KkConf,
@@ -73,6 +79,31 @@ impl KrisKringles {
         }
         None
     }
+
+    /// Returns all participants used in the Kris Kringle allocation
+    pub fn get_participants(&self) -> Vec<String> {
+        self.configuration
+            .get_participants()
+            .iter()
+            .map(|x| x.get_name())
+            .collect()
+    }
+
+    /// Sends emails to the allocated giver of the Kris Kringle pair. This function
+    /// will fail if the allocation has not yet been performed.
+    // TODO Add some error handling
+    pub fn email_givers(&self) -> Result<(), String> {
+        if invalid_map(&self.pairs) {
+            return Err(String::from("The pairs have not yet been allocated!!!"));
+        }
+
+        if email::send_emails(self).is_ok() {
+            Ok(())
+        } else {
+            Err(String::from("Unable to send emails"))
+        }
+
+    }
 }
 
 /// Performs the pairing of each giver to the receiver
@@ -108,20 +139,19 @@ fn shuffle_pairs(max_length: usize, pairs: &mut Vec<KkPair>) {
 /// confirm that groups are different.
 fn invalid_map(pairs: &Vec<KkPair>) -> bool {
     for pair in pairs {
-        // TODO Change all the below to logs
-        // println!("Comparing {:?} - {:?}", pair.giver, pair.receiver);
+        debug!("Comparing {:?} - {:?}", pair.giver, pair.receiver);
 
         if pair.giver.get_name().eq(&pair.receiver.get_name()) {
-            // println!("It is invalid");
+            debug!("It is invalid");
             return true;
         }
         let giver_group = pair.giver.get_group();
         let recvr_group = pair.receiver.get_group();
         if giver_group == recvr_group {
-            // println!("It is invalid");
+            debug!("It is invalid");
             return true;
         }
     }
-    // println!("It is valid");
+    debug!("It is valid");
     false
 }

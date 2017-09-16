@@ -1,4 +1,8 @@
 target
 
+# Editor generated files
+.vscode
+.idea
+
 # Generated files
 *.kk

@@ -2,6 +2,7 @@
 name = "kris_kringle"
 version = "0.1.0"
 authors = ["maccod <maccora17@gmail.com>"]
+build = "build.rs"
 
 [dependencies]
 clap = "2.22"
@@ -10,3 +11,8 @@ lettre = "0.6.2"
 toml = "0.3"
 serde = "0.9"
 serde_derive = "0.9"
+log = "0.3"
+
+rocket = "0.3"
+rocket_codegen = "0.3"
+rocket_contrib = "0.3"
