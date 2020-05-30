@@ -14,6 +14,13 @@ impl KkConf {
         toml::from_str(&file_utils::read_from_file(path)).unwrap()
     }
 
+    pub fn new(participants: Vec<Participants>) -> KkConf {
+        KkConf {
+            groups: vec![],
+            participants
+        }
+    }
+
     /// Returns the participants read from the configuration
     pub fn get_participants(&self) -> Vec<Participants> {
         self.participants.clone()
@@ -53,14 +60,14 @@ impl Participants {
 #[derive(Debug, Clone, Deserialize)]
 pub struct Group {
     pub id: u32,
-    pub email: String,
+    pub email: Option<String>,
 }
 impl Group {
     pub fn get_id(&self) -> u32 {
         self.id
     }
 
-    pub fn get_email(&self) -> String {
+    pub fn get_email(&self) -> Option<String> {
         self.email.clone()
     }
 }
@@ -73,13 +80,13 @@ mod tests {
 
         let groups = result.get_groups();
         assert_eq!(1, groups[0].get_id());
-        assert!(groups[0].get_email().eq("test1@hotmail.com"));
+        assert!(groups[0].get_email().unwrap().eq("test1@hotmail.com"));
         assert_eq!(2, groups[1].get_id());
-        assert!(groups[1].get_email().eq("test2@gmail.com"));
+        assert!(groups[1].get_email().unwrap().eq("test2@gmail.com"));
         assert_eq!(3, groups[2].get_id());
-        assert!(groups[2].get_email().eq("test3@yahoo.com"));
+        assert!(groups[2].get_email().unwrap().eq("test3@yahoo.com"));
         assert_eq!(4, groups[3].get_id());
-        assert!(groups[3].get_email().eq("test4@outlook.com"));
+        assert!(groups[3].get_email().unwrap().eq("test4@outlook.com"));
 
         let participants = result.get_participants();
         assert_eq!(1, participants[0].get_group());

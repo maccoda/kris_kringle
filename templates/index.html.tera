@@ -1,0 +1,16 @@
+{% extends "base.html.tera" %}
+
+{% block content %}
+<div class="row">
+  <div class="column">
+    <h1>Kris Kringle</h1>
+  </div>
+</div>
+<form class="ui form" action="/participants">
+  <div class="field">
+    <label>How many people are participating?</label>
+    <input id="num_participants" name="num_participants" type="number" min="2" value="2" />
+  </div>
+  <button class="ui primary button">Let's Go</button>
+</form>
+{% endblock content %}

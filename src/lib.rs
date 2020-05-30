@@ -10,12 +10,12 @@ use std::path::Path;
 
 use rand::Rng;
 
-mod conf;
+pub mod conf;
 mod email;
 pub mod file_utils;
 
 #[derive(Debug)]
-struct KkPair {
+pub struct KkPair {
     giver: conf::Participants,
     receiver: conf::Participants,
 }
@@ -26,6 +26,21 @@ impl KkPair {
     }
     pub fn get_receiver(&self) -> conf::Participants {
         self.receiver.clone()
+    }
+}
+
+#[derive(Serialize)]
+pub struct Pair {
+    giver: String,
+    receiver: String
+}
+
+impl From<&KkPair> for Pair {
+    fn from(pair: &KkPair) -> Self {
+        Pair {
+            giver: pair.giver.get_name().clone(),
+            receiver: pair.receiver.get_name().clone()
+        }
     }
 }
 
@@ -49,6 +64,19 @@ impl KrisKringles {
             pairs: pairs,
         }
 
+    }
+
+    pub fn from_config(conf: conf::KkConf) -> KrisKringles {
+        let pairs = perform_pairing(&conf.get_participants());
+
+        KrisKringles {
+            configuration: conf,
+            pairs: pairs
+        }
+    }
+
+    pub fn get_pairs(&self) -> Vec<Pair> {
+        self.pairs.iter().map(| x| x.into()).collect()
     }
 
     /// Once the configuration has been loaded, this will allow for the allocation of the kris kringles following

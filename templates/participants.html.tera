@@ -1,0 +1,32 @@
+{% extends "base.html.tera" %}
+{% block subtitle %}- participants{% endblock subtitle %}
+
+{% block content %}
+<div class="row">
+  <div class="column">
+    <h1>Kris Kringle</h1>
+  </div>
+</div>
+<div class="row">
+  <div class="column">
+    <form class="ui form" method="POST" action="/allocate">
+      <h4 class="ui dividing header">People participating</h4>
+      {% for a in num_participants %}
+      <div class="two fields">
+        <div class="field">
+          <label>Name</label>
+          <input name="name[]" type="text" placeholder="Name...">
+        </div>
+        <div class="field">
+          <label>Group number</label>
+          <input name="group[]" type="number" placeholder="Group" min="1">
+        </div>
+      </div>
+      {% endfor %}
+      <div class="ui divider"></div>
+
+      <button class="ui primary button" type="submit">Submit</button>
+    </form>
+  </div>
+</div>
+{% endblock content %}

@@ -1,0 +1,21 @@
+{% extends "base.html.tera" %}
+{% block subtitle %}- allocation{% endblock subtitle %}
+
+{% block content %}
+<div class="row">
+  <div class="column">
+    <h1>Kris Kringle</h1>
+  </div>
+</div>
+<div class="row">
+  <div class="column">
+    <h4 class="ui dividing header">Kris Kringle Pairs</h4>
+    <div class="ui relaxed divided list">
+      {% for pair in pairs %}
+      <div class="item">
+        {{pair.giver}} => {{pair.receiver}}
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+  {% endblock content %}

@@ -2,17 +2,21 @@
 name = "kris_kringle"
 version = "0.1.0"
 authors = ["maccod <maccora17@gmail.com>"]
-build = "build.rs"
+edition = "2018"
 
 [dependencies]
 clap = "2.22"
 rand = "0.3.*"
-lettre = "0.6.2"
-toml = "0.3"
-serde = "0.9"
-serde_derive = "0.9"
+lettre = "0.9.2"
+toml = "0.5"
+serde = "1"
+serde_derive = "1"
 log = "0.3"
 
-rocket = "0.3"
-rocket_codegen = "0.3"
-rocket_contrib = "0.3"
+lazy_static = "1.4"
+actix-web = "2.0"
+actix-rt = "1.0"
+
+[dependencies.tera]
+version = "1"
+default-features = false
