@@ -6,6 +6,8 @@ use serde::Deserialize;
 use tera::{Tera, Context};
 use actix_web::{web, App, HttpResponse, HttpServer, Responder};
 use kris_kringle::conf;
+use std::env;
+
 
 async fn index() -> impl Responder {
     let mut context = Context::new();
@@ -61,13 +63,18 @@ fn parse_body(body: &String) -> Vec<conf::Participants> {
 
 #[actix_rt::main]
 async fn main() -> std::io::Result<()> {
+    let port = env::var("PORT")
+        .unwrap_or_else(|_| "8088".to_string())
+        .parse()
+        .expect("PORT must be a number");
+
     HttpServer::new(|| {
         App::new()
             .route("/", web::get().to(index))
             .route("/participants", web::get().to(participants))
             .route("/allocate", web::post().to(allocate_kks))
     })
-    .bind("127.0.0.1:8088")?
+    .bind(("0.0.0.0", port))?
     .run()
     .await
 }
