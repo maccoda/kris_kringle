@@ -1,8 +1,8 @@
 use std::env;
 
-use lettre::email::EmailBuilder;
-use lettre::transport::EmailTransport;
-use lettre::transport::smtp;
+// use lettre::email::EmailBuilder;
+// use lettre::transport::EmailTransport;
+// use lettre::transport::smtp;
 
 /// This function would be the final step for the process as it is the method in which
 /// we will inform everyone of the allocations. This will use the information provided in
@@ -11,29 +11,29 @@ use lettre::transport::smtp;
 pub fn send_emails(conf: &super::KrisKringles) -> Result<(), String> {
     debug!("Time to start sending emails");
     info!("Using the email: {:?}", env::var("GMAIL_USERNAME").unwrap());
-    let mut transport = smtp::SmtpTransportBuilder::new(("smtp.gmail.com", smtp::SUBMISSION_PORT))
-        .expect("failed to create transport")
-        .credentials(&env::var("GMAIL_USERNAME").unwrap(),
-                     &env::var("GMAIL_PASSWORD").unwrap())
-        .build();
-    for group in &conf.configuration.get_groups() {
-        info!("Constructing email for {:?}", group.get_email());
+    // let mut transport = smtp::SmtpTransportBuilder::new(("smtp.gmail.com", smtp::SUBMISSION_PORT))
+    //     .expect("failed to create transport")
+    //     .credentials(&env::var("GMAIL_USERNAME").unwrap(),
+    //                  &env::var("GMAIL_PASSWORD").unwrap())
+    //     .build();
+    // for group in &conf.configuration.get_groups() {
+    //     info!("Constructing email for {:?}", group.get_email());
 
-        let body = collate_group_content(group, conf);
+    //     let body = collate_group_content(group, conf);
 
-        let email = EmailBuilder::new()
-            .from("santa.claus@northpole.com")
-            .to(group.get_email().as_ref())
-            .subject("Kris Kringle allocation")
-            .body(body.as_ref())
-            .build()
-            .expect("Someone has stuffed up here..");
+    //     let email = EmailBuilder::new()
+    //         .from("santa.claus@northpole.com")
+    //         .to(group.get_email().as_ref())
+    //         .subject("Kris Kringle allocation")
+    //         .body(body.as_ref())
+    //         .build()
+    //         .expect("Someone has stuffed up here..");
 
 
-        if transport.send(email).is_err() {
-            return Err(format!("Unable to send email to {:?}", group.get_email()));
-        }
-    }
+    //     if transport.send(email).is_err() {
+    //         return Err(format!("Unable to send email to {:?}", group.get_email()));
+    //     }
+    // }
 
 
     Ok(())
