@@ -1,6 +1,7 @@
 language: rust
 rust:
     - nightly
+    - stable
 
 before_install:
     - curl -sL https://deb.nodesource.com/setup_8.x | sudo -E bash -
