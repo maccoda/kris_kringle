@@ -167,19 +167,19 @@ fn shuffle_pairs(max_length: usize, pairs: &mut Vec<KkPair>) {
 /// confirm that groups are different.
 fn invalid_map(pairs: &Vec<KkPair>) -> bool {
     for pair in pairs {
-        debug!("Comparing {:?} - {:?}", pair.giver, pair.receiver);
+        info!("Comparing {:?} - {:?}", pair.giver, pair.receiver);
 
         if pair.giver.get_name().eq(&pair.receiver.get_name()) {
-            debug!("It is invalid");
+            info!("It is invalid");
             return true;
         }
         let giver_group = pair.giver.get_group();
         let recvr_group = pair.receiver.get_group();
         if giver_group == recvr_group {
-            debug!("It is invalid");
+            info!("It is invalid");
             return true;
         }
     }
-    debug!("It is valid");
+    info!("It is valid");
     false
 }

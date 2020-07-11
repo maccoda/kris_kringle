@@ -8,6 +8,7 @@ use actix_web::{web, App, HttpResponse, HttpServer, Responder};
 use kris_kringle::conf;
 use std::env;
 
+mod kk_log;
 
 async fn index() -> impl Responder {
     let mut context = Context::new();
@@ -22,8 +23,8 @@ struct ParticipantsParams {
 }
 
 async fn participants(params: web::Query<ParticipantsParams>) -> impl Responder {
-let mut context = Context::new();
-context.insert("num_participants",  &vec![0;params.num_participants]);
+    let mut context = Context::new();
+    context.insert("num_participants",  &vec![0;params.num_participants]);
     let rendered = TERA.render("participants.html.tera", &context).unwrap();
     HttpResponse::Ok().body(rendered)
 }
@@ -31,7 +32,7 @@ context.insert("num_participants",  &vec![0;params.num_participants]);
 
 async fn allocate_kks(req: String) -> impl Responder {
     let body = parse_body(&req);
-    let conf = conf::KkConf::new(body);
+    let conf = conf::KkConf::new(body).unwrap();
     let kris_kringles = kris_kringle::KrisKringles::from_config(conf);
     let mut context = Context::new();
     context.insert("pairs", &kris_kringles.get_pairs());
@@ -67,6 +68,13 @@ async fn main() -> std::io::Result<()> {
         .unwrap_or_else(|_| "8088".to_string())
         .parse()
         .expect("PORT must be a number");
+
+    println!("Starting server at http://localhost:{}", port);
+
+    log::set_logger(|max_log_level| {
+        max_log_level.set(::log::LogLevelFilter::Debug);
+        Box::new(kk_log::SimpleLogger)
+    }).unwrap();
 
     HttpServer::new(|| {
         App::new()

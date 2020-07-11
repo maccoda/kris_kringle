@@ -14,10 +14,15 @@ impl KkConf {
         toml::from_str(&file_utils::read_from_file(path)).unwrap()
     }
 
-    pub fn new(participants: Vec<Participants>) -> KkConf {
-        KkConf {
-            groups: vec![],
-            participants
+    pub fn new(participants: Vec<Participants>) -> Result<KkConf, String> {
+        let first_group = participants[0].group;
+        if participants.iter().all(|participant| participant.group == first_group) {
+            Err("All participants part of the same group".to_owned())
+        } else {
+            Ok(KkConf {
+                groups: vec![],
+                participants
+            })
         }
     }
 

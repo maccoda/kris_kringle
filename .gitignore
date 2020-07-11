@@ -3,6 +3,7 @@ target
 # Editor generated files
 .vscode
 .idea
+.history
 
 # Generated files
 *.kk
