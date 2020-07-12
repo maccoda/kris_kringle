@@ -1,3 +1,4 @@
+
 use log::{LogLevel, LogMetadata, LogRecord};
 
 pub struct SimpleLogger;

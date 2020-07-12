@@ -8,8 +8,6 @@ use actix_web::{web, App, HttpResponse, HttpServer, Responder};
 use kris_kringle::conf;
 use std::env;
 
-mod kk_log;
-
 async fn index() -> impl Responder {
     let mut context = Context::new();
     context.insert("name", "Gotham");
@@ -73,7 +71,7 @@ async fn main() -> std::io::Result<()> {
 
     log::set_logger(|max_log_level| {
         max_log_level.set(::log::LogLevelFilter::Debug);
-        Box::new(kk_log::SimpleLogger)
+        Box::new(kris_kringle::kk_log::SimpleLogger)
     }).unwrap();
 
     HttpServer::new(|| {

@@ -13,6 +13,7 @@ use rand::Rng;
 pub mod conf;
 mod email;
 pub mod file_utils;
+pub mod kk_log;
 
 #[derive(Debug)]
 pub struct KkPair {
